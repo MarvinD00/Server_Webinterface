@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dashboard</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>
+	<h1>System Information</h1>
+	{% if server_status %}
+	<div class="container" id="info">
+		<div class="info">
+			{% set uname_info = command_results['uname -a'].split() %}
+			<p>Hostname: {{ uname_info[1] }}</p>
+			<p>Linux Version: {{ uname_info[2] }}</p>
+			<h2>Uptime</h2>
+			<pre>{{ command_results['uptime'] }}</pre>
+			<h2>Disk Space</h2>
+			<pre>{{ command_results['df -h'] }}</pre>
+		</div>
+		<div class="info">
+			<h2>Memory Usage</h2>
+			{% set memory_info = command_results['free -m'].split('\n') %}
+			<table>
+				<tr>
+					<th>Category</th>
+					<th>Usage (MB)</th>
+				</tr>
+				<tr>
+					<td>Total Memory</td>
+					<td>{{ memory_info[1].split()[1] }}</td>
+				</tr>
+				<tr>
+					<td>Used Memory</td>
+					<td>{{ memory_info[1].split()[2] }}</td>
+				</tr>
+				<tr>
+					<td>Free Memory</td>
+					<td>{{ memory_info[1].split()[3] }}</td>
+				</tr>
+				<tr>
+					<td>Shared Memory</td>
+					<td>{{ memory_info[1].split()[4] }}</td>
+				</tr>
+				<tr>
+					<td>Buffer/Cache</td>
+					<td>{{ memory_info[1].split()[5] }}</td>
+				</tr>
+				<tr>
+					<td>Available Memory</td>
+					<td>{{ memory_info[1].split()[6] }}</td>
+				</tr>
+				<tr>
+					<td>Total Swap</td>
+					<td>{{ memory_info[2].split()[1] }}</td>
+				</tr>
+				<tr>
+					<td>Used Swap</td>
+					<td>{{ memory_info[2].split()[2] }}</td>
+				</tr>
+				<tr>
+					<td>Free Swap</td>
+					<td>{{ memory_info[2].split()[3] }}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	{% else %}
+	<p>Server is not running. System information is not available.</p>
+	{% endif %}
+	{% if server_status %} 
+	<span>Server Status : ON</span>
+	{% else %}
+	<span>Server Status : OFF</span>
+	{% endif %}
+	<h2>Server Controls</h2>
+    <form action="/start_server" method="post">
+        <button type="submit" name="action" value="start">Start Server</button>
+    </form>
+    <form action="/stop_server" method="post">
+        <button type="submit" name="action" value="stop">Stop Server</button>
+    </form>
+    <form action="/restart_server" method="post">
+        <button type="submit" name="action" value="restart">Restart Server</button>
+    </form>
+</body>
+</html>
