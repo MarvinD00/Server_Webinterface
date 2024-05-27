@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Logs</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="/dashboard">Dashboard</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" href="/logs">Logs</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/files">Files</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/mc_server_console">MC Server Console</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container mt-5">
+		<h1 class="mb-4">Logs</h1>
+		<form>
+			<div class="form-group">
+				<label for="log_file">Select Log File:</label>
+				<select class="form-control" name="log_file" id="log_file">
+					{% for log_file in log_files %}
+					<option value="{{ log_file }}">{{ log_file }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<button type="button" class="btn btn-primary" onclick="viewLog()">View Log</button>
+		</form>
+
+		<div id="logContent" class="mt-4"></div>
+	</div>
+
+	<script>
+		function viewLog() {
+			var selectedLogFile = document.getElementById("log_file").value;
+			var logContents = {
+				{% for log_file, log_content in log_contents.items() %}
+					"{{ log_file }}": `{{ log_content | replace('\n', '\\n') | replace('\'', '\\\'') }}`,
+				{% endfor %}
+			};
+		
+			var logContent = logContents[selectedLogFile];
+			var logContentDiv = document.getElementById("logContent");
+		
+			if (logContent !== undefined) {
+				logContentDiv.innerText = logContent;
+				logContentDiv.classList.add('alert', 'alert-secondary');
+			} else {
+				logContentDiv.innerText = "Log file not found";
+				logContentDiv.classList.add('alert', 'alert-danger');
+			}
+		}
+	</script>
+</body>
+
+</html>

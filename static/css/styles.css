@@ -1,14 +1,26 @@
 body {
-	font-family: Arial, sans-serif;
-	background-color: #f4f4f9;
-	color: #333;
+	font-family: 'Roboto', sans-serif;
+	background-color: #f8f9fa;
+	color: #343a40;
+	margin-left: 10px;
 }
 .navbar {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	background-color: #333;
-	padding: 10px;
+	margin-bottom: 20px;
+	margin-left: -10px;
+}
+.container {
+	margin-top: 20px;
+}
+.alert {
+	white-space: pre-wrap;
+	margin-top: 20px;
+	padding: 20px;
+}
+.alert-danger {
+	margin-top: 20px;
+}
+.form-group {
+	margin-bottom: 20px;
 }
 .navbar a {
 	color: white;
@@ -18,7 +30,7 @@ body {
 .navbar a:hover {
 	background-color: #575757;
 }
-.container {
+.infocontainer {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
@@ -63,4 +75,11 @@ button:hover {
 .server-status {
 	margin-top: 20px;
 	font-size: 1.2em;
+}
+.servercontrols {
+	display: flex;
+	flex-direction: row;
+}
+.servercontrolbutton {
+	margin-right: 10px;
 }

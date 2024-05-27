@@ -5,6 +5,46 @@ import subprocess
 
 app = Flask(__name__)
 
+def list_log_files(username, password):
+	try:
+		ssh = paramiko.SSHClient()
+		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		ssh.connect('archsurfer', username=username, password=password, timeout=5)
+		_, stdout, _ = ssh.exec_command("ls -t /home/admin/server/logs")
+		log_files = stdout.read().decode().split()
+		ssh.close()
+		return log_files
+	except Exception as e:
+		print("Error listing log files:", e)
+		return []
+
+def get_log_files(username, password):
+	try:
+		ssh = paramiko.SSHClient()
+		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+		ssh.connect('archsurfer', username=username, password=password, timeout=5)
+		
+		# Liste der Log-Dateien abrufen
+		_, stdout, _ = ssh.exec_command("ls /home/admin/server/logs")
+		log_files = stdout.read().decode().split()
+
+		log_contents = {}
+		for log_file in log_files:
+			if log_file.endswith('.log.gz'):
+				command = f"zcat /home/admin/server/logs/{log_file}"
+				_, stdout, _ = ssh.exec_command(command)
+				log_contents[log_file] = stdout.read().decode()
+			elif log_file.endswith('.log'):
+				command = f"cat /home/admin/server/logs/{log_file}"
+				_, stdout, _ = ssh.exec_command(command)
+				log_contents[log_file] = stdout.read().decode()
+
+		ssh.close()
+		return log_contents
+	except Exception as e:
+		print("Error getting log files:", e)
+		return {}
+
 def get_server_status(username, password):
 	try:
 		ssh = paramiko.SSHClient()
@@ -112,6 +152,14 @@ def restart_server():
 	while not get_server_status(username, password):
 		pass
 	return redirect(url_for('dashboard'))
+
+@app.route('/logs')
+def logs():
+	if not sql.check_user(username, password):
+		return redirect(url_for('index'))
+	log_files = list_log_files(username, password)
+	log_contents = get_log_files(username, password)
+	return render_template('logs.html', log_files=log_files, log_contents=log_contents)
 
 if __name__ == '__main__':
 	sql.generate_db()
