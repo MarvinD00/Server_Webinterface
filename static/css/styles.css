@@ -1,7 +1,7 @@
 body {
 	font-family: 'Roboto', sans-serif;
-	background-color: #f8f9fa;
-	color: #343a40;
+	background-color: rgb(19, 18, 18);
+	color: #ffffff;
 	margin-left: 10px;
 }
 .navbar {
@@ -37,14 +37,18 @@ body {
 	padding: 20px;
 }
 .info {
-	background-color: white;
+	background-color: rgb(70, 70, 70);
 	border-radius: 5px;
 	padding: 20px;
 	margin: 10px;
-	box-shadow: 0 0 10px rgba(0,0,0,0.1);
+	box-shadow: 0 0 10px ;
 	flex: 1;
 	min-width: 45%;
 	font-size: 0.9em;
+}
+.info pre {
+	white-space: pre-wrap;
+	color: white;
 }
 table {
 	width: 100%;
@@ -58,7 +62,7 @@ th, td {
 	text-align: left;
 }
 th {
-	background-color: #f2f2f2;
+	background-color: rgb(70, 70, 70);
 }
 button {
 	background-color: #333;
@@ -82,4 +86,14 @@ button:hover {
 }
 .servercontrolbutton {
 	margin-right: 10px;
+}
+.card-header {
+	background-color: rgb(19, 18, 18);
+	color: white;
+	border-bottom: none;
+	border-radius: 10px 10px 0 0;
+}
+.card-body {
+	background-color: rgb(70, 70, 70);
+	padding: 30px;
 }
