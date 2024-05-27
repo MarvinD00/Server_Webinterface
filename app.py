@@ -4,6 +4,8 @@ import paramiko
 import subprocess
 
 app = Flask(__name__)
+username = None
+password = None
 
 def list_log_files(username, password):
 	try:
@@ -94,12 +96,14 @@ def index():
 		global username, password
 		username = request.form.get('username')
 		password = request.form.get('password')
-		return redirect(url_for('dashboard', username=username, password=password))
+		if sql.check_user(username, password):
+			return redirect(url_for('dashboard', username=username, password=password))
 	return render_template('index.html')
 
 @app.route('/dashboard')
 def dashboard():
-	if not sql.check_user(username, password):
+	# used for testing purposes do not know if needed in production
+	if username is None or password is None:
 		return redirect(url_for('index'))
 
 	server_status = get_server_status(username, password)
@@ -128,8 +132,6 @@ def dashboard():
 
 @app.route('/delete_log', methods=['POST'])
 def delete_log():
-	if not sql.check_user(username, password):
-		return redirect(url_for('index'))
 	log_file = request.form.get('current_log_file')
 	command = f"rm /home/admin/server/logs/{log_file}"
 	execute_ssh_command(command)
@@ -163,7 +165,8 @@ def restart_server():
 
 @app.route('/logs')
 def logs():
-	if not sql.check_user(username, password):
+	# used for testing purposes do not know if needed in production
+	if username is None or password is None:
 		return redirect(url_for('index'))
 	log_files = list_log_files(username, password)
 	log_contents = get_log_files(username, password)
