@@ -126,6 +126,14 @@ def dashboard():
 
 	return render_template('dashboard.html', command_results=command_results, server_status=server_status)
 
+@app.route('/delete_log', methods=['POST'])
+def delete_log():
+	if not sql.check_user(username, password):
+		return redirect(url_for('index'))
+	log_file = request.form.get('current_log_file')
+	command = f"rm /home/admin/server/logs/{log_file}"
+	execute_ssh_command(command)
+	return redirect(url_for('logs'))
 
 @app.route('/start_server', methods=['POST'])
 def start_server():

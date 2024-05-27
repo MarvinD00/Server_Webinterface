@@ -38,15 +38,22 @@
 		<form>
 			<div class="form-group">
 				<label for="log_file">Select Log File:</label>
-				<select class="form-control" name="log_file" id="log_file">
+				<select class="form-control" name="log_file" id="log_file" onchange="updateCurrentLogFile()">
 					{% for log_file in log_files %}
 					<option value="{{ log_file }}">{{ log_file }}</option>
 					{% endfor %}
 				</select>
 			</div>
-			<button type="button" class="btn btn-primary" onclick="viewLog()">View Log</button>
 		</form>
-
+		<div class="logbuttons">
+			<form class="mt-3">
+				<button type="button" class="btn btn-primary" onclick="viewLog()">View Log</button>
+			</form>
+			<form action="/delete_log" method="POST" class="mt-3">
+				<input type="hidden" id="current_log_file" name="current_log_file" value="">
+				<button type="submit" class="btn btn-danger">Delete Log</button>
+			</form>
+		</div>
 		<div id="logContent" class="mt-4"></div>
 	</div>
 
@@ -70,6 +77,13 @@
 				logContentDiv.classList.add('alert', 'alert-danger');
 			}
 		}
+		function updateCurrentLogFile() {
+			var selectedLogFile = document.getElementById("log_file").value;
+			document.getElementById("current_log_file").value = selectedLogFile;
+		}
+		document.addEventListener("DOMContentLoaded", function() {
+			updateCurrentLogFile();
+		});
 	</script>
 </body>
 

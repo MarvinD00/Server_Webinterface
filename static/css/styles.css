@@ -97,3 +97,19 @@ button:hover {
 	background-color: rgb(70, 70, 70);
 	padding: 30px;
 }
+.logbuttons {
+	margin-top: 20px;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+}
+.logbuttons form {
+	margin: 0;
+	padding: 0;
+	vertical-align: top;
+}
+.logbuttons button {
+	margin-right: 10px;
+	height: 40px;
+}
